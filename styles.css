@@ -1,0 +1,43 @@
+body{
+  background-color: Teal ;
+}
+
+
+
+.path {
+  color: #4BBF73;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.error {
+  color: #373738;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.jumbo{
+  background-color: rebeccapurple;
+}
+
+.module .name {
+  margin-top: 15px;
+  font-size: 25px;
+  color: #9c149c;
+}
+
+.module .item {
+  font-size: 20px;
+  margin-left: 15px;
+  font-weight: bold;
+  color: #ff0000;
+}
+
+.module .total {
+  margin-top: 20px;
+  text-transform: uppercase;
+  font-size: 25px;
+  color: #000;
+}
+
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LAB3</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="container mt-5">
+
+        <div class="text-center mb-5">
+
+            <div class="file-input">
+                <input type="file" id="fileElement" multiple accept="text/plain" style="display:none" onchange="handleFiles(this.files)">
+                <button id="fileSelect" class="btn btn-success">Seleccionar Achivo</button>
+            </div>
+
+            <div class="path mt-5" id="path"> </div>
+
+            <div class="error" id="error"></div>
+
+        </div>
+        
+        <div class="jumbotron text-center">
+            <div id="results"></div>
+        </div>
+            
+
+    </div>
+
+    <script>
+
+        const file = require('./src/utils/file');
+        const string = require('./src/utils/string');
+
+        let fileSelect = document.getElementById("fileSelect"),
+            fileElement = document.getElementById("fileElement"),
+            path = document.getElementById("path")
+            error = document.getElementById("error");
+
+        fileSelect.addEventListener('click', () => {
+
+            if (fileElement) {
+                fileElement.click();
+            }
+
+        }, false);
+
+        function handleFiles(files) {
+
+            let selectedFile = files[0];
+
+            file.openFile(selectedFile.path, (error, data) => {
+
+                if (error) {
+
+                    let textNode = document.createTextNode(error);
+                    error.appendChild(textNode);
+
+                } else {
+
+                    removeElements();
+
+                    let programSize = string.getProgramSize(data);
+                    let totalLines = programSize.size;
+                    let modules = programSize.modules;
+                    console.log("MODULES ",modules);
+                    createDiv(modules,totalLines);                    
+                    
+                    let divPath =  document.createElement('div');
+                    let textNode = document.createTextNode(selectedFile.path);
+                    divPath.appendChild(textNode);
+                    path.appendChild(divPath);
+                }                
+            });            
+        }
+
+        function createDiv (modules, totalLines) {
+
+            let div = document.getElementById("results");
+            div.className = 'module';
+
+            for(let i=0; i < modules.length; i++) {
+
+                let divModule = document.createElement('div');
+
+                let divName =  document.createElement('div');
+                divName.className = 'name';
+                let textNode = document.createTextNode(`Modulo: ${modules[i].name}`);
+                divName.appendChild(textNode);
+
+                let divFunctions =  document.createElement('div');
+                divFunctions.className = 'item';
+                textNode = document.createTextNode(`El número de funciones es: ${modules[i].functions}`);
+                divFunctions.appendChild(textNode);
+
+                let divModuleLines =  document.createElement('div');
+                divModuleLines.className = 'item';
+                textNode = document.createTextNode(`Número de lineas: ${modules[i].lines}`);
+                divModuleLines.appendChild(textNode);             
+
+                divModule.appendChild(divName);
+                divModule.appendChild(divFunctions);
+                divModule.appendChild(divModuleLines);
+                div.appendChild(divModule);
+            }
+
+            let divTotalLines = document.createElement('div');
+            divTotalLines.className = 'float-right total';
+            let textNode = document.createTextNode(`El total de lineas en el archivo es: ${totalLines}`);
+            divTotalLines.appendChild(textNode);
+            div.appendChild(divTotalLines);
+        }
+
+        function removeElements() {
+            
+            let div = document.getElementById("results");
+
+            while(div.firstChild){
+               div.removeChild(div.firstChild);
+            }
+
+            path.removeChild(path.firstChild);
+
+            while(path.firstChild){
+               path.removeChild(path.firstChild);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
